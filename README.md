@@ -19,7 +19,7 @@ UPDATE "AO_60DB71_SPRINT" set "RAPID_VIEW_ID" = 4 WHERE "RAPID_VIEW_ID" = 13;
 Back on the Standalone system we now need to grab all the customfieldvalues for all the Sprint fields for the old issues,   we're going to use this to edit all the post imported issues later to populate out boards
 You need to know 2 things: the custom field id of the source system & the destination for the Sprint field
 In my systems this was 10007 for the source & 10306 for the destination (you can get this from the Custom fields page in the Admin area of JIRA by clicking on edit or view, grabbing it from the URL)   
-
+you can also get the id by list issue status http://ozjira.lan:8091/rest/api/2/issue/CMC-3200  
 for l in  "`mysql -ujira -pjira jira -e "select CONCAT(p.pkey,'-', i.issuenum),c.stringvalue from customfieldvalue c join jiraissue i on c.issue = i.id join project p on i.project = p.id where c.customfield = 10021" | sort -k 1`"  
 do  
 echo $l >>sprint.txt  
@@ -31,3 +31,9 @@ you will need edit the workflow to allow edit closed ticket for using issue rest
 
 
 other option is do by Agile API curl -D- -u admin:admin -X POST -H 'Content-Type: application/json' -d '{"issues":["ISSUE-1","ISSUE-2"]}' http://jira:8080/rest/agile/1.0/sprint/<Sprint ID>/issue
+
+
+# get what option you can do with a issue field
+GET http://jira:8080/rest/api/2/issue/{issueIdOrKey}/editmeta  
+then you can edit the issue with the operations which customfield_xxx supported by below API  
+PUT http://jira:8080/rest/api/2/issue/{issueIdOrKey}
