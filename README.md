@@ -27,7 +27,9 @@ done
 awk '{a[$1]=$2","a[$1]}END{for (i in a){ gsub(/,$/,"",a[i]);print i,a[i]}}' sprint.txt >sprint.txt.multiplesprints  
 while read id sprint ; do echo curl -D- -u \$\{u\}:\$\{p\} -X PUT -H \'Content-Type: application/json\' -d \'{ \"fields\" : { \"customfield_10021\": \"${sprint}\" } }\' \$\{h\}/rest/api/2/issue/${id}; done <sprint.txt.multiplesprints  
 
-you will need edit the workflow to allow edit closed ticket for using issue rest api  
+you will need edit the workflow(remove the jira.issue.editable property of closed status) to allow edit closed staus ticket for using issue rest api on closed ticket
+Remeber the Sprint field of issue can only be set one time by rest api
+
 
 
 other option is do by Agile API curl -D- -u admin:admin -X POST -H 'Content-Type: application/json' -d '{"issues":["ISSUE-1","ISSUE-2"]}' http://jira:8080/rest/agile/1.0/sprint/<Sprint ID>/issue
